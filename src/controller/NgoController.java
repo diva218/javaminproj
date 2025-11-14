@@ -129,11 +129,16 @@ public class NgoController {
     @FXML
     private void handleLogout() {
         try {
+            model.Session.setCurrentUser(null);
             Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.setScene(new Scene(root, 800, 500));
             stage.setTitle("Food Inventory - Login");
             stage.show();
-        } catch (Exception ignored) {}
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to load login: " + ex.getMessage(), ButtonType.OK);
+            alert.setHeaderText("Navigation Error");
+            alert.showAndWait();
+        }
     }
 }

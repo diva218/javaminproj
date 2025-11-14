@@ -2,62 +2,100 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
-<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.NgoController" spacing="10" stylesheets="/styles.css">
-  <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-  <children>
-    <HBox spacing="10" styleClass="header-bar">
-      <children>
-        <Label text="NGO Dashboard" />
-        <Region HBox.hgrow="ALWAYS" />
-        <Button text="Logout" onAction="#handleLogout" />
-      </children>
-    </HBox>
 
-    <TitledPane text="Place Order" expanded="true">
-      <content>
-        <HBox spacing="10" alignment="CENTER_LEFT">
-          <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
-          <children>
-            <Label text="Select Item:" />
-            <ComboBox fx:id="itemChoice" prefWidth="220" />
-            <Label text="Quantity:" />
-            <TextField fx:id="qtyField" prefWidth="80" promptText="0" />
-            <Button text="Order" onAction="#handlePlaceOrder" />
-            <Label fx:id="statusLabel" />
-          </children>
+<VBox xmlns="http://javafx.com/javafx/17"
+      xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="controller.NgoController"
+      spacing="15"
+      alignment="TOP_CENTER"
+      stylesheets="/styles.css"
+      styleClass="root-bg">
+
+    <padding>
+        <Insets top="25" right="25" bottom="25" left="25"/>
+    </padding>
+
+    <children>
+
+        <!-- ================= HEADER ================= -->
+        <HBox spacing="10" styleClass="header-card header-shadow">
+            <children>
+                <Label text="NGO Dashboard" styleClass="page-title"/>
+                <Region HBox.hgrow="ALWAYS"/>
+                <Button text="Logout" onAction="#handleLogout" styleClass="bouncy-btn logout-btn"/>
+            </children>
         </HBox>
-      </content>
-    </TitledPane>
 
-    <SplitPane dividerPositions="0.5">
-      <items>
-        <VBox spacing="6">
-          <children>
-            <Label text="Inventory" />
-            <TableView fx:id="inventoryTable">
-              <columns>
-                <TableColumn fx:id="invColName" text="Name" prefWidth="160" />
-                <TableColumn fx:id="invColCategory" text="Category" prefWidth="120" />
-                <TableColumn fx:id="invColQty" text="Qty" prefWidth="70" />
-                <TableColumn fx:id="invColExpiry" text="Expiry" prefWidth="120" />
-              </columns>
-            </TableView>
-          </children>
+        <!-- ================= ORDER CARD ================= -->
+        <VBox spacing="12" styleClass="content-card card-shadow">
+            <padding>
+                <Insets top="20" right="20" bottom="20" left="20"/>
+            </padding>
+
+            <children>
+                <Label text="Place Order" styleClass="section-title"/>
+
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <children>
+                        <Label text="Select Item:"/>
+                        <ComboBox fx:id="itemChoice" prefWidth="220"/>
+
+                        <Label text="Quantity:"/>
+                        <TextField fx:id="qtyField" prefWidth="80" promptText="0"/>
+
+                        <Button text="Order"
+                                onAction="#handlePlaceOrder"
+                                styleClass="bouncy-btn primary-btn"/>
+
+                        <Label fx:id="statusLabel" styleClass="status-label"/>
+                    </children>
+                </HBox>
+            </children>
         </VBox>
-        <VBox spacing="6">
-          <children>
-            <Label text="My Orders" />
-            <TableView fx:id="ordersTable">
-              <columns>
-                <TableColumn fx:id="ordColId" text="Order #" prefWidth="80" />
-                <TableColumn fx:id="ordColItem" text="Item" prefWidth="160" />
-                <TableColumn fx:id="ordColQty" text="Qty" prefWidth="70" />
-                <TableColumn fx:id="ordColDate" text="Date" prefWidth="140" />
-              </columns>
-            </TableView>
-          </children>
-        </VBox>
-      </items>
-    </SplitPane>
-  </children>
+
+        <!-- ================= SPLIT PANEL ================= -->
+        <SplitPane dividerPositions="0.5" styleClass="split-pane-clean">
+
+            <items>
+
+                <!-- INVENTORY TABLE -->
+                <VBox spacing="10" styleClass="content-card card-shadow">
+                    <padding><Insets top="20" left="20" right="20" bottom="20"/></padding>
+                    <children>
+                        <Label text="Inventory" styleClass="section-title"/>
+
+                        <TableView fx:id="inventoryTable" styleClass="table-card">
+                            <columns>
+                                <TableColumn fx:id="invColName" text="Name" prefWidth="160"/>
+                                <TableColumn fx:id="invColCategory" text="Category" prefWidth="120"/>
+                                <TableColumn fx:id="invColQty" text="Qty" prefWidth="70"/>
+                                <TableColumn fx:id="invColExpiry" text="Expiry" prefWidth="120"/>
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+                <!-- ORDERS TABLE -->
+                <VBox spacing="10" styleClass="content-card card-shadow">
+                    <padding><Insets top="20" left="20" right="20" bottom="20"/></padding>
+                    <children>
+                        <Label text="My Orders" styleClass="section-title"/>
+
+                        <TableView fx:id="ordersTable" styleClass="table-card">
+                            <columns>
+                                <TableColumn fx:id="ordColId" text="Order #" prefWidth="80"/>
+                                <TableColumn fx:id="ordColItem" text="Item" prefWidth="160"/>
+                                <TableColumn fx:id="ordColQty" text="Qty" prefWidth="70"/>
+                                <TableColumn fx:id="ordColDate" text="Date" prefWidth="140"/>
+                            </columns>
+                        </TableView>
+                    </children>
+                </VBox>
+
+            </items>
+
+        </SplitPane>
+
+    </children>
 </VBox>
+

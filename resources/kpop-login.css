@@ -1,0 +1,4 @@
+@import url("styles.css");
+
+/* Minimal fallback styles in case styles.css doesn't load */
+.root.kpop-login-bg { -fx-background-color: linear-gradient(to bottom right, #fff0f6, #f0f7ff); }

@@ -49,9 +49,14 @@ public final class DBUtil {
                 "item_name TEXT NOT NULL, " +
                 "quantity INTEGER NOT NULL, " +
                 "order_date TEXT NOT NULL, " +
+                "completed INTEGER NOT NULL DEFAULT 0, " +
                 "FOREIGN KEY (ngo_username) REFERENCES users(username) ON DELETE CASCADE" +
                 ")"
             );
+            // Backward-compatibility: add completed column if existing table lacks it
+            try {
+                statement.executeUpdate("ALTER TABLE orders ADD COLUMN completed INTEGER NOT NULL DEFAULT 0");
+            } catch (SQLException ignore) { /* column may already exist */ }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to initialize database table", e);
         }
@@ -182,17 +187,22 @@ public final class DBUtil {
     }
 
     public static ResultSet selectOrdersForNgo(Connection connection, String ngoUsername) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("SELECT id, ngo_username, item_id, item_name, quantity, order_date FROM orders WHERE ngo_username = ? ORDER BY id DESC");
+        PreparedStatement ps = connection.prepareStatement("SELECT id, ngo_username, item_id, item_name, quantity, order_date FROM orders WHERE ngo_username = ? AND completed = 0 ORDER BY id DESC");
         ps.setString(1, ngoUsername);
         return ps.executeQuery();
     }
 
     public static ResultSet selectAllOrders(Connection connection) throws SQLException {
-        PreparedStatement ps = connection.prepareStatement("SELECT id, ngo_username, item_id, item_name, quantity, order_date FROM orders ORDER BY id DESC");
+        PreparedStatement ps = connection.prepareStatement("SELECT id, ngo_username, item_id, item_name, quantity, order_date FROM orders WHERE completed = 0 ORDER BY id DESC");
         return ps.executeQuery();
     }
 
+    public static void markOrderCompleted(int orderId) throws SQLException {
+        try (Connection connection = getConnection();
+             PreparedStatement ps = connection.prepareStatement("UPDATE orders SET completed = 1 WHERE id = ?")) {
+            ps.setInt(1, orderId);
+            ps.executeUpdate();
+        }
+    }
+
 }
-
-
-

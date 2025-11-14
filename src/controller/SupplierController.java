@@ -17,6 +17,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Optional;
 
 public class SupplierController {
     @FXML private TextField nameField;
@@ -120,13 +121,64 @@ public class SupplierController {
     }
 
     @FXML
+    private void handleDeleteSelected() {
+        FoodItem selected = inventoryTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            statusLabel.setText("Select an item to delete");
+            return;
+        }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirm Delete");
+        confirm.setHeaderText("Delete Food Item");
+        confirm.setContentText("Are you sure you want to delete '" + selected.getName() + "'?");
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try (Connection c = DBUtil.getConnection()) {
+                DBUtil.deleteFoodItemById(c, selected.getId());
+                statusLabel.setText("Item deleted");
+                refreshInventory();
+            } catch (SQLException e) {
+                statusLabel.setText("Delete failed: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
+    private void handleMarkOrderCompleted() {
+        Order selected = ordersTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            statusLabel.setText("Select an order to mark completed");
+            return;
+        }
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Complete Order");
+        confirm.setHeaderText("Mark Order as Completed");
+        confirm.setContentText("Mark order #" + selected.getId() + " as completed?");
+        Optional<ButtonType> result = confirm.showAndWait();
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            try {
+                DBUtil.markOrderCompleted(selected.getId());
+                statusLabel.setText("Order marked completed");
+                refreshOrders();
+            } catch (SQLException e) {
+                statusLabel.setText("Update failed: " + e.getMessage());
+            }
+        }
+    }
+
+    @FXML
     private void handleLogout() {
         try {
+            model.Session.setCurrentUser(null);
             Parent root = FXMLLoader.load(getClass().getResource("/Login.fxml"));
             Stage stage = (Stage) statusLabel.getScene().getWindow();
             stage.setScene(new Scene(root, 800, 500));
             stage.setTitle("Food Inventory - Login");
             stage.show();
-        } catch (Exception ignored) {}
+        } catch (Exception ex) {
+            Alert alert = new Alert(Alert.AlertType.ERROR, "Failed to load login: " + ex.getMessage(), ButtonType.OK);
+            alert.setHeaderText("Navigation Error");
+            alert.showAndWait();
+        }
     }
 }
