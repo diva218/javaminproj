@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController" style="-fx-background-color: #f8f9fa;">
+    <top>
+        <VBox spacing="10" style="-fx-background-color: #ffffff; -fx-border-color: #dee2e6; -fx-border-width: 0 0 1 0;">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            <children>
+                <Label text="Food Storage Management System" style="-fx-font-size: 24px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;">
+                    <font>
+                        <Font name="System Bold" size="24.0" />
+                    </font>
+                </Label>
+                <Label text="Reducing hunger through better inventory management" style="-fx-font-size: 14px; -fx-text-fill: #6c757d;" />
+                
+                <!-- Search Bar -->
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <children>
+                        <Label text="Search:" style="-fx-font-weight: bold;" />
+                        <TextField fx:id="searchField" promptText="Search by name or category..." prefWidth="300" style="-fx-background-radius: 5; -fx-border-radius: 5;" />
+                        <Button fx:id="clearSearchButton" text="Clear" onAction="#handleClearSearch" style="-fx-background-color: #6c757d; -fx-text-fill: white; -fx-background-radius: 5;" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <Button fx:id="exportButton" text="Export CSV" onAction="#handleExport" style="-fx-background-color: #28a745; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" />
+                    </children>
+                </HBox>
+            </children>
+        </VBox>
+    </top>
+    
+    <center>
+        <VBox spacing="10">
+            <padding>
+                <Insets top="10" right="15" bottom="10" left="15"/>
+            </padding>
+            <children>
+                <!-- Legend -->
+                <HBox spacing="20" alignment="CENTER_LEFT">
+                    <children>
+                        <Label text="Legend:" style="-fx-font-weight: bold;" />
+                        <Label text="RED: Expired/Expiring Soon" style="-fx-background-color: #ffe4e1; -fx-padding: 2 8 2 8; -fx-background-radius: 3;" />
+                        <Label text="ORANGE: Low Stock (less than 10)" style="-fx-background-color: #ffeaa7; -fx-padding: 2 8 2 8; -fx-background-radius: 3;" />
+                        <Label text="GREEN: Normal" style="-fx-background-color: #d4edda; -fx-padding: 2 8 2 8; -fx-background-radius: 3;" />
+                    </children>
+                </HBox>
+                
+                <TableView fx:id="tableView" style="-fx-background-color: white; -fx-border-color: #dee2e6; -fx-border-radius: 5;">
+                    <columns>
+                        <TableColumn fx:id="colId" text="ID" prefWidth="60" style="-fx-alignment: CENTER;" />
+                        <TableColumn fx:id="colName" text="Name" prefWidth="200" />
+                        <TableColumn fx:id="colCategory" text="Category" prefWidth="160" />
+                        <TableColumn fx:id="colQuantity" text="Quantity" prefWidth="100" style="-fx-alignment: CENTER;" />
+                        <TableColumn fx:id="colExpiry" text="Expiry Date" prefWidth="160" style="-fx-alignment: CENTER;" />
+                    </columns>
+                </TableView>
+            </children>
+        </VBox>
+    </center>
+    
+    <bottom>
+        <VBox spacing="10" style="-fx-background-color: #ffffff; -fx-border-color: #dee2e6; -fx-border-width: 1 0 0 0;">
+            <padding>
+                <Insets top="15" right="15" bottom="15" left="15"/>
+            </padding>
+            <children>
+                <Label text="Add/Edit Food Item" style="-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #2c3e50;" />
+                
+                <HBox spacing="10" alignment="CENTER_LEFT">
+                    <children>
+                        <VBox spacing="5">
+                            <children>
+                                <Label text="Name *" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
+                                <TextField fx:id="nameField" promptText="Enter food name" prefWidth="150" style="-fx-background-radius: 5; -fx-border-radius: 5;" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <children>
+                                <Label text="Category" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
+                                <TextField fx:id="categoryField" promptText="e.g., Fruits, Vegetables" prefWidth="150" style="-fx-background-radius: 5; -fx-border-radius: 5;" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <children>
+                                <Label text="Quantity" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
+                                <TextField fx:id="quantityField" promptText="Enter quantity" prefWidth="100" style="-fx-background-radius: 5; -fx-border-radius: 5;" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="5">
+                            <children>
+                                <Label text="Expiry Date" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
+                                <TextField fx:id="expiryDateField" promptText="YYYY-MM-DD" prefWidth="120" style="-fx-background-radius: 5; -fx-border-radius: 5;" />
+                            </children>
+                        </VBox>
+                        
+                        <VBox spacing="5" alignment="BOTTOM_LEFT">
+                            <children>
+                                <Label text="Actions" style="-fx-font-weight: bold; -fx-font-size: 12px;" />
+                                <HBox spacing="5">
+                                    <children>
+                                        <Button fx:id="addButton" text="Add" onAction="#handleAdd" style="-fx-background-color: #007bff; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" />
+                                        <Button fx:id="editButton" text="Edit" onAction="#handleEdit" style="-fx-background-color: #ffc107; -fx-text-fill: black; -fx-background-radius: 5; -fx-font-weight: bold;" />
+                                        <Button fx:id="deleteButton" text="Delete" onAction="#handleDelete" style="-fx-background-color: #dc3545; -fx-text-fill: white; -fx-background-radius: 5; -fx-font-weight: bold;" />
+                                    </children>
+                                </HBox>
+                            </children>
+                        </VBox>
+                    </children>
+                </HBox>
+                
+                <Label text="* Required fields. Date format: YYYY-MM-DD (e.g., 2024-12-31)" style="-fx-font-size: 11px; -fx-text-fill: #6c757d;" />
+            </children>
+        </VBox>
+    </bottom>
+</BorderPane>
+
+

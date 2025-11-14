@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.MainController">
+    <center>
+        <TableView fx:id="tableView">
+            <columns>
+                <TableColumn fx:id="colId" text="ID" prefWidth="60" />
+                <TableColumn fx:id="colName" text="Name" prefWidth="200" />
+                <TableColumn fx:id="colCategory" text="Category" prefWidth="160" />
+                <TableColumn fx:id="colQuantity" text="Quantity" prefWidth="100" />
+                <TableColumn fx:id="colExpiry" text="Expiry Date" prefWidth="160" />
+            </columns>
+        </TableView>
+    </center>
+    <bottom>
+        <HBox spacing="10" padding="10">
+            <children>
+                <TextField fx:id="nameField" promptText="Name" />
+                <TextField fx:id="categoryField" promptText="Category" />
+                <TextField fx:id="quantityField" promptText="Quantity" />
+                <TextField fx:id="expiryDateField" promptText="Expiry Date (YYYY-MM-DD)" />
+                <Button fx:id="addButton" text="Add" onAction="#handleAdd" />
+                <Button fx:id="deleteButton" text="Delete" onAction="#handleDelete" />
+            </children>
+        </HBox>
+    </bottom>
+</BorderPane>
+
+

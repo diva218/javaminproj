@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.LoginController" spacing="16" alignment="CENTER" stylesheets="/styles.css">
+  <padding><Insets top="40" right="40" bottom="40" left="40"/></padding>
+  <children>
+    <VBox spacing="8" alignment="CENTER">
+      <padding><Insets top="24" right="24" bottom="24" left="24"/></padding>
+      <children>
+        <Label text="Food Inventory - Login" />
+        <HBox spacing="10" alignment="CENTER_LEFT">
+          <children>
+            <Label text="Username:" />
+            <TextField fx:id="usernameField" promptText="Enter username" prefWidth="240" />
+          </children>
+        </HBox>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+          <children>
+            <Label text="Role:" />
+            <ChoiceBox fx:id="roleChoice" />
+          </children>
+        </HBox>
+        <Button text="Login" onAction="#handleLogin" />
+      </children>
+    </VBox>
+  </children>
+</VBox>

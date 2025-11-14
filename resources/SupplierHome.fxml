@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SupplierController" spacing="10">
+  <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+  <children>
+    <HBox spacing="10" styleClass="header-bar">
+      <children>
+        <Label text="Supplier Dashboard" />
+        <Region HBox.hgrow="ALWAYS" />
+        <Button text="Logout" onAction="#handleLogout" />
+      </children>
+    </HBox>
+
+    <TitledPane text="Donate / Add Stock" expanded="true">
+      <content>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+          <padding><Insets top="10" right="10" bottom="10" left="10"/></padding>
+          <children>
+            <TextField fx:id="nameField" promptText="Item name" prefWidth="150" />
+            <TextField fx:id="categoryField" promptText="Category" prefWidth="120" />
+            <TextField fx:id="qtyField" promptText="Qty" prefWidth="80" />
+            <TextField fx:id="expiryField" promptText="YYYY-MM-DD" prefWidth="120" />
+            <Button text="Add" onAction="#handleAddStock" />
+            <Label fx:id="statusLabel" />
+          </children>
+        </HBox>
+      </content>
+    </TitledPane>
+
+    <SplitPane dividerPositions="0.5">
+      <items>
+        <VBox spacing="6">
+          <children>
+            <Label text="Current Inventory" />
+            <TableView fx:id="inventoryTable">
+              <columns>
+                <TableColumn fx:id="invColId" text="ID" prefWidth="60" />
+                <TableColumn fx:id="invColName" text="Name" prefWidth="160" />
+                <TableColumn fx:id="invColCategory" text="Category" prefWidth="120" />
+                <TableColumn fx:id="invColQty" text="Qty" prefWidth="70" />
+                <TableColumn fx:id="invColExpiry" text="Expiry" prefWidth="120" />
+              </columns>
+            </TableView>
+          </children>
+        </VBox>
+        <VBox spacing="6">
+          <children>
+            <Label text="Donation/Order History (NGO Orders)" />
+            <TableView fx:id="ordersTable">
+              <columns>
+                <TableColumn fx:id="ordColId" text="Order #" prefWidth="80" />
+                <TableColumn fx:id="ordColNgo" text="NGO" prefWidth="120" />
+                <TableColumn fx:id="ordColItem" text="Item" prefWidth="160" />
+                <TableColumn fx:id="ordColQty" text="Qty" prefWidth="70" />
+                <TableColumn fx:id="ordColDate" text="Date" prefWidth="140" />
+              </columns>
+            </TableView>
+          </children>
+        </VBox>
+      </items>
+    </SplitPane>
+  </children>
+</VBox>

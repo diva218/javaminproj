@@ -1,0 +1,31 @@
+# Compiled class files
+*.class
+bin/
+
+# Log files
+*.log
+
+# Package files
+*.jar
+
+# Eclipse project files
+.classpath
+.project
+.settings/
+
+# IntelliJ project files
+.idea/
+*.iml
+
+# VS Code files
+.vscode/
+
+# Database files
+*.db
+
+# Maven
+target/
+
+# Gradle
+build/
+.gradle/
