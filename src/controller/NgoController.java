@@ -30,6 +30,7 @@ public class NgoController {
     @FXML private TableColumn<FoodItem, String> invColCategory;
     @FXML private TableColumn<FoodItem, Integer> invColQty;
     @FXML private TableColumn<FoodItem, String> invColExpiry;
+    @FXML private TableColumn<FoodItem, String> invColSupplier;
 
     @FXML private TableView<Order> ordersTable;
     @FXML private TableColumn<Order, Integer> ordColId;
@@ -46,6 +47,9 @@ public class NgoController {
         invColCategory.setCellValueFactory(new PropertyValueFactory<>("category"));
         invColQty.setCellValueFactory(new PropertyValueFactory<>("quantity"));
         invColExpiry.setCellValueFactory(new PropertyValueFactory<>("expiryDate"));
+        if (invColSupplier != null) {
+            invColSupplier.setCellValueFactory(new PropertyValueFactory<>("supplierUsername"));
+        }
         inventoryTable.setItems(inventory);
 
         ordColId.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -62,7 +66,7 @@ public class NgoController {
     private void refreshInventory() {
         inventory.clear();
         try (Connection c = DBUtil.getConnection();
-             PreparedStatement ps = c.prepareStatement("SELECT id, name, category, quantity, expiry_date FROM food_items ORDER BY name");
+             PreparedStatement ps = c.prepareStatement("SELECT id, name, category, quantity, expiry_date, supplier_username FROM food_items ORDER BY name");
              ResultSet rs = ps.executeQuery()) {
             while (rs.next()) {
                 inventory.add(new FoodItem(
@@ -70,7 +74,8 @@ public class NgoController {
                         rs.getString("name"),
                         rs.getString("category"),
                         rs.getInt("quantity"),
-                        rs.getString("expiry_date")
+                        rs.getString("expiry_date"),
+                        rs.getString("supplier_username")
                 ));
             }
         } catch (SQLException e) {
@@ -100,7 +105,9 @@ public class NgoController {
     private void refreshChoiceBox() {
         itemChoice.getItems().clear();
         for (FoodItem fi : inventory) {
-            itemChoice.getItems().add(fi.getId() + ": " + fi.getName());
+            String supplier = fi.getSupplierUsername();
+            String label = fi.getId() + ": " + fi.getName() + (supplier == null || supplier.isEmpty() ? "" : " (" + supplier + ")");
+            itemChoice.getItems().add(label);
         }
         if (!itemChoice.getItems().isEmpty()) itemChoice.getSelectionModel().selectFirst();
     }

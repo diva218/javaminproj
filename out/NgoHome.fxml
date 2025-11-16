@@ -70,6 +70,7 @@
                                 <TableColumn fx:id="invColCategory" text="Category" prefWidth="120"/>
                                 <TableColumn fx:id="invColQty" text="Qty" prefWidth="70"/>
                                 <TableColumn fx:id="invColExpiry" text="Expiry" prefWidth="120"/>
+                                <TableColumn fx:id="invColSupplier" text="Supplier" prefWidth="140"/>
                             </columns>
                         </TableView>
                     </children>

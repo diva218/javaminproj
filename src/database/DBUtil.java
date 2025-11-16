@@ -28,7 +28,8 @@ public final class DBUtil {
                             DatabaseConfig.COL_NAME + " TEXT NOT NULL, " +
                             DatabaseConfig.COL_CATEGORY + " TEXT, " +
                             DatabaseConfig.COL_QUANTITY + " INTEGER DEFAULT 0, " +
-                            DatabaseConfig.COL_EXPIRY_DATE + " TEXT" +
+                            DatabaseConfig.COL_EXPIRY_DATE + " TEXT, " +
+                            DatabaseConfig.COL_SUPPLIER_USERNAME + " TEXT" +
                             ")"
             );
 
@@ -56,6 +57,12 @@ public final class DBUtil {
             // Backward-compatibility: add completed column if existing table lacks it
             try {
                 statement.executeUpdate("ALTER TABLE orders ADD COLUMN completed INTEGER NOT NULL DEFAULT 0");
+            } catch (SQLException ignore) { /* column may already exist */ }
+
+            // Backward-compatibility: add supplier_username column to food_items if missing
+            try {
+                statement.executeUpdate("ALTER TABLE " + DatabaseConfig.TABLE_FOOD_ITEMS +
+                        " ADD COLUMN " + DatabaseConfig.COL_SUPPLIER_USERNAME + " TEXT");
             } catch (SQLException ignore) { /* column may already exist */ }
         } catch (SQLException e) {
             throw new RuntimeException("Failed to initialize database table", e);
@@ -95,6 +102,22 @@ public final class DBUtil {
         }
     }
 
+    // New: insert item for a specific supplier
+    public static void insertFoodItemForSupplier(Connection connection, String supplierUsername, String name, String category, int quantity, String expiryDate) throws SQLException {
+        try (PreparedStatement statement = connection.prepareStatement(
+                "INSERT INTO " + DatabaseConfig.TABLE_FOOD_ITEMS + "(" +
+                        DatabaseConfig.COL_NAME + ", " + DatabaseConfig.COL_CATEGORY + ", " +
+                        DatabaseConfig.COL_QUANTITY + ", " + DatabaseConfig.COL_EXPIRY_DATE + ", " +
+                        DatabaseConfig.COL_SUPPLIER_USERNAME + ") VALUES (?, ?, ?, ?, ?)")) {
+            statement.setString(1, name);
+            statement.setString(2, category);
+            statement.setInt(3, quantity);
+            statement.setString(4, expiryDate);
+            statement.setString(5, supplierUsername);
+            statement.executeUpdate();
+        }
+    }
+
     public static void deleteFoodItemById(Connection connection, int id) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(
                 "DELETE FROM " + DatabaseConfig.TABLE_FOOD_ITEMS + " WHERE " + DatabaseConfig.COL_ID + " = ?")) {
@@ -129,6 +152,17 @@ public final class DBUtil {
         statement.setString(1, searchPattern);
         statement.setString(2, searchPattern);
         return statement.executeQuery();
+    }
+
+    // New: select items for a specific supplier
+    public static ResultSet selectFoodItemsForSupplier(Connection connection, String supplierUsername) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(
+                "SELECT " + DatabaseConfig.COL_ID + ", " + DatabaseConfig.COL_NAME + ", " +
+                        DatabaseConfig.COL_CATEGORY + ", " + DatabaseConfig.COL_QUANTITY + ", " +
+                        DatabaseConfig.COL_EXPIRY_DATE + " FROM " + DatabaseConfig.TABLE_FOOD_ITEMS +
+                        " WHERE " + DatabaseConfig.COL_SUPPLIER_USERNAME + " = ? ORDER BY " + DatabaseConfig.COL_ID + " DESC");
+        ps.setString(1, supplierUsername);
+        return ps.executeQuery();
     }
 
     // Users
@@ -197,11 +231,31 @@ public final class DBUtil {
         return ps.executeQuery();
     }
 
+    public static ResultSet selectOrdersForSupplier(Connection connection, String supplierUsername) throws SQLException {
+        PreparedStatement ps = connection.prepareStatement(
+                "SELECT o.id, o.ngo_username, o.item_id, o.item_name, o.quantity, o.order_date " +
+                "FROM orders o JOIN " + DatabaseConfig.TABLE_FOOD_ITEMS + " f ON o.item_id = f." + DatabaseConfig.COL_ID + " " +
+                "WHERE f." + DatabaseConfig.COL_SUPPLIER_USERNAME + " = ? AND o.completed = 0 ORDER BY o.id DESC");
+        ps.setString(1, supplierUsername);
+        return ps.executeQuery();
+    }
+
     public static void markOrderCompleted(int orderId) throws SQLException {
         try (Connection connection = getConnection();
              PreparedStatement ps = connection.prepareStatement("UPDATE orders SET completed = 1 WHERE id = ?")) {
             ps.setInt(1, orderId);
             ps.executeUpdate();
+        }
+    }
+
+    public static void clearAllData() throws SQLException {
+        try (Connection connection = getConnection();
+             Statement statement = connection.createStatement()) {
+            // Delete all data from tables (in order to respect foreign key constraints)
+            statement.executeUpdate("DELETE FROM orders");
+            statement.executeUpdate("DELETE FROM " + DatabaseConfig.TABLE_FOOD_ITEMS);
+            statement.executeUpdate("DELETE FROM users");
+            System.out.println("✓ All data has been cleared from the database");
         }
     }
 

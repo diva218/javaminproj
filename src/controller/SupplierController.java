@@ -12,6 +12,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
 import model.FoodItem;
 import model.Order;
+import model.Session;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -66,8 +67,7 @@ public class SupplierController {
     private void refreshInventory() {
         inventory.clear();
         try (Connection c = DBUtil.getConnection();
-             PreparedStatement ps = c.prepareStatement("SELECT id, name, category, quantity, expiry_date FROM food_items ORDER BY id DESC");
-             ResultSet rs = ps.executeQuery()) {
+             ResultSet rs = DBUtil.selectFoodItemsForSupplier(c, Session.getCurrentUser().getUsername())) {
             while (rs.next()) {
                 inventory.add(new FoodItem(
                         rs.getInt("id"),
@@ -85,7 +85,7 @@ public class SupplierController {
     private void refreshOrders() {
         allOrders.clear();
         try (Connection c = DBUtil.getConnection();
-             ResultSet rs = DBUtil.selectAllOrders(c)) {
+             ResultSet rs = DBUtil.selectOrdersForSupplier(c, Session.getCurrentUser().getUsername())) {
             while (rs.next()) {
                 allOrders.add(new Order(
                         rs.getInt("id"),
@@ -111,7 +111,7 @@ public class SupplierController {
         if (name.isEmpty()) { statusLabel.setText("Name required"); return; }
         if (qty <= 0) { statusLabel.setText("Qty must be > 0"); return; }
         try (Connection c = DBUtil.getConnection()) {
-            DBUtil.insertFoodItem(c, name, category, qty, expiry);
+            DBUtil.insertFoodItemForSupplier(c, Session.getCurrentUser().getUsername(), name, category, qty, expiry);
             statusLabel.setText("Stock added");
             nameField.clear(); categoryField.clear(); qtyField.clear(); expiryField.clear();
             refreshInventory();

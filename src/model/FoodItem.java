@@ -11,6 +11,7 @@ public class FoodItem {
     private final StringProperty category;
     private final IntegerProperty quantity;
     private final StringProperty expiryDate;
+    private final StringProperty supplierUsername;
 
     public FoodItem(int id, String name, String category, int quantity, String expiryDate) {
         this.id = new SimpleIntegerProperty(id);
@@ -18,6 +19,16 @@ public class FoodItem {
         this.category = new SimpleStringProperty(category);
         this.quantity = new SimpleIntegerProperty(quantity);
         this.expiryDate = new SimpleStringProperty(expiryDate);
+        this.supplierUsername = new SimpleStringProperty("");
+    }
+
+    public FoodItem(int id, String name, String category, int quantity, String expiryDate, String supplierUsername) {
+        this.id = new SimpleIntegerProperty(id);
+        this.name = new SimpleStringProperty(name);
+        this.category = new SimpleStringProperty(category);
+        this.quantity = new SimpleIntegerProperty(quantity);
+        this.expiryDate = new SimpleStringProperty(expiryDate);
+        this.supplierUsername = new SimpleStringProperty(supplierUsername == null ? "" : supplierUsername);
     }
 
     public IntegerProperty idProperty() { return id; }
@@ -38,6 +49,9 @@ public class FoodItem {
     public StringProperty expiryDateProperty() { return expiryDate; }
     public String getExpiryDate() { return expiryDate.get(); }
     public void setExpiryDate(String value) { expiryDate.set(value); }
+
+     public StringProperty supplierUsernameProperty() { return supplierUsername; }
+     public String getSupplierUsername() { return supplierUsername.get(); }
 }
 
 

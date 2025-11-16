@@ -23,4 +23,5 @@ public class DatabaseConfig {
     public static final String COL_CATEGORY = "category";
     public static final String COL_QUANTITY = "quantity";
     public static final String COL_EXPIRY_DATE = "expiry_date";
+    public static final String COL_SUPPLIER_USERNAME = "supplier_username";
 }
